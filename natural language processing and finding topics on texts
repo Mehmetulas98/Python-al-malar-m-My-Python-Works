@@ -1,0 +1,84 @@
+import numpy as np 
+import pandas as pd 
+import os
+
+
+#Reading data 
+#My data is articles1.csv which one contanins different types of datas.
+reviews_datasets = pd.read_csv("articles1.csv")
+reviews_datasets = reviews_datasets.head(100)
+reviews_datasets.dropna()
+
+#Deleting stop words and making count vector
+from sklearn.feature_extraction.text import CountVectorizer
+count_vect = CountVectorizer(max_df=0.8, min_df=2, stop_words='english')
+doc_term_matrix = count_vect.fit_transform(reviews_datasets['content'].values.astype('U'))
+
+#LDA model and fitting
+#With n_component we can select our topic features number.
+from sklearn.decomposition import LatentDirichletAllocation
+LDA = LatentDirichletAllocation(n_components=5, random_state=42)
+LDA.fit(doc_term_matrix) 
+
+#Printing random tapic names
+
+import random
+for i in range(10):
+    random_id = random.randint(0,len(count_vect.get_feature_names()))
+    print(count_vect.get_feature_names()[random_id])
+    
+pint("End of random features")    
+#&&    
+first_topic = LDA.components_[0]
+sorted_firsttopic=first_topic.argsort()
+
+for i in sorted_firsttopic:
+    print(count_vect.get_feature_names()[i])
+    
+for i,topic in enumerate(LDA.components_):
+    print(f'Top 10 words for topic #{i}:')
+    print([count_vect.get_feature_names()[i] for i in topic.argsort()[-10:]])
+    print('\n')
+topic_values = LDA.transform(doc_term_matrix)
+topic_values.shape
+
+#adding coclusion topic axis on reviews_datasets which is our original dataset.
+reviews_datasets['Topic'] = topic_values.argmax(axis=1)
+
+conclusion=reviews_datasets.head()
+
+
+
+
+
+
+this is my code block and my result is below
+
+
+
+
+
+
+
+Top 10 words for topic #0:
+['general', 'state', 'united', 'time', 'million', 'people', 'turkey', 'mr', 'like', 'year']
+
+
+Top 10 words for topic #1:
+['congress', 'senate', 'law', 'care', 'people', 'health', 'house', 'republicans', 'trump', 'mr']
+
+
+Top 10 words for topic #2:
+['time', 'year', 'military', 'intelligence', 'obama', 'president', 'news', 'ms', 'trump', 'mr']
+
+
+Top 10 words for topic #3:
+['jobs', 'company', 'email', 'american', 'emails', 'government', 'russian', 'team', 'hacking', 'mr']
+
+
+Top 10 words for topic #4:
+['york', 'city', 'years', 'time', 'police', 'year', 'ms', 'like', 'people', 'mr']
+
+
+
+and you can see text topics on original dataset after code work.
