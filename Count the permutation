@@ -1,0 +1,36 @@
+
+#Problem is https://www.hackerearth.com/challenges/competitive/mock-online-coding-assessments-easy-python/algorithm/little-jhool-and-too-many-products-29fb5474-56561f34/
+
+def control(a,s):
+    control=True
+    operation_counter=0
+    number=s
+
+    while(control):
+
+        if(number>a):
+            operation_counter=0
+            control=False
+        if(number<=a):
+            operation_counter+=1
+            number+=s
+            if(number>a):
+                control=False
+    return (operation_counter)
+
+test_counter=input("Test Counter : ")
+result_list=[]
+for i in range(4):
+    way_counter=0
+    a = int(input("İnput A : "))
+    s = int(input("İnput S : "))
+    result_list.append(control(a,s))
+
+print(result_list)
+
+
+
+
+
+
+
